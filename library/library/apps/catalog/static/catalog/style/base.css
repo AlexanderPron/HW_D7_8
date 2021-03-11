@@ -1,0 +1,11 @@
+.wrap{
+  width: 80%;
+  margin: 0 auto;
+}
+ul.head-nav{
+  display: flex;
+  justify-content: flex-end;
+}
+li.item-head-nav{
+  margin-left: 20px;
+}

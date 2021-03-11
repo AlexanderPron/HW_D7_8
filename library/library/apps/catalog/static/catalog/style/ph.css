@@ -1,0 +1,44 @@
+.row{
+  display: inline-flex;
+}
+.well{
+  width:300px;
+  padding: 8px 0;
+  margin-top: 20px;
+}
+.wrap{
+  width: 80%;
+  margin: 0 auto;
+}
+.content{
+  width: 300px;
+  word-wrap: break-word;
+  height: 400px;
+  border: double 4px #e4e4e4;
+  background-color: #f5f5f5;
+  color: #a89999;
+  border-radius: 5px;
+  margin-left: 30px;
+  padding: 20px;
+  overflow: auto;
+}
+.legend-content{
+  width: auto;
+  margin: 0;
+  border: 0;
+  color: #a89999;
+  font-size: 16px;
+  padding: 0 5px;
+}
+ul.head-nav{
+  display: flex;
+  justify-content: flex-end;
+}
+li.item-head-nav{
+  margin-left: 20px;
+}
+.book-pic{
+  display:flex;
+  justify-content: center;
+}
+

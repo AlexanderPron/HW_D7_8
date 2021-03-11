@@ -1,0 +1,21 @@
+th{
+    text-align: left;
+}
+label{
+    font-weight: bold;
+}
+textarea{
+    margin-left: 20px;
+    width: 220px;
+    min-width: 220px;
+    max-width: 400px;
+    height: 40px;
+}
+input{
+    margin-left: 20px;
+    width: 220px;
+}
+select{
+    margin-left: 20px;
+    width: 220px;
+}

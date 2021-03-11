@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block page-style %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'catalog/style/ph.css' %}">
+{% endblock %}
+{% block page-title %} Учёт {% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-4">
+            <div class="well">
+                <div style="overflow-y: scroll; overflow-x: hidden; max-height: 500px;">
+                <ul class="nav nav-list">
+                    {% for bk in bk_list %}
+                        <li><a href="#" onclick="showInfo(`{{ bk.user_id }}`, `{{ bk.start_use_date }}`, `{{ bk.user_id.address }}`)">{{ bk.book_title }}(id записи: {{ bk.id }})</a></li>
+                    {% endfor %}
+                </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-7">
+        <fieldset class="content">
+            <legend class="legend-content">Информация</legend>
+            <div class="tab-content" id="nav-tabContent"></div>
+        </fieldset>
+        </div>
+    </div>
+{% endblock %}
+{% block page-script %} 
+    <script>
+        function showInfo(user_id, start_use_date, address) {
+        document.querySelector('#nav-tabContent').innerHTML = `Взял: <b>${user_id}</b></br>Дата: <b>${start_use_date}</b></br>Адрес: <b>${address}</b>`;
+        }
+    </script>
+{% endblock %}

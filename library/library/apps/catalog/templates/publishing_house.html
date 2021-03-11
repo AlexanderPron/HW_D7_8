@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block page-style %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'catalog/style/ph.css' %}">
+{% endblock %}
+{% block page-title %} Список книг {% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-4">
+        <div class="well">
+            <div style="overflow-y: scroll; overflow-x: hidden; max-height: 500px;">
+                <ul class="nav nav-list">
+                  {% for ph in ph_list %}
+                    <li><label class="tree-toggler nav-header">{{ ph.name}}</label>
+                        <ul class="nav nav-list tree">
+                          {% for book in ph.books.all %}
+                            <li id="description_id"><a href="#" id = "{{ book.ISBN }}" onclick="showDescription(`{{ book.description }}`, `{{ book.pic_url }}`)">{{ book.title }}</a></li>
+                          {% endfor %}
+                        </ul>
+                    </li>
+                    <li class="divider"></li>
+                  {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-7">
+      <fieldset class="content">
+        <legend class="legend-content">Описание</legend>
+        <div class="book-pic" id="book-pic-id"></div>
+        <div class="tab-content" id="nav-tabContent"></div>
+      </fieldset>
+    </div>
+  </div>
+
+{% endblock %}
+{% block page-script %} 
+  <script src={% static 'catalog/js/ph.js' %}></script>
+  <script>
+    function showDescription(book_description, url_pic) {
+      document.querySelector('#book-pic-id').innerHTML = ``;
+      if (url_pic !== 'None') {
+        document.querySelector('#book-pic-id').innerHTML = `<img src="${url_pic}" width="100" height="100">`;
+      }
+      document.querySelector('#nav-tabContent').innerHTML = book_description;
+    }
+  </script>
+
+{% endblock %}
+</body>
+</html>

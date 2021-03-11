@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block page-style %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'catalog/style/add_book.css' %}">
+{% endblock %}
+{% block page-title %} Добавить книгу {% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">  
+	{% csrf_token %}  
+	<table>
+	{{ form.as_table }}  
+	</table>
+	<input class="btn" type="submit" value="Сохранить" style="margin: 10px 0 0 0 ;" name="create_single">  
+	<input class="btn" type="submit" value="Сохранить и добавить ещё" style="margin: 10px 0 0 10px;" name="create_and_add">
+</form>  
+
+{% endblock %}
