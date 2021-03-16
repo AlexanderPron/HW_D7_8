@@ -19,6 +19,7 @@ from django.conf.urls import include
 from catalog import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth.views import LoginView, LogoutView
 # from catalog.views import BookEdit
 
 urlpatterns = [
@@ -31,5 +32,7 @@ urlpatterns = [
     path('bk/', views.bk, name='bk'),
     # path('edit/', BookEdit.as_view(), name='edit-book'),
     path('add/', views.book_add, name='add-book'),
+    path('login/', LoginView.as_view(template_name='login.html'), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
