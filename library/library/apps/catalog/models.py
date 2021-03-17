@@ -1,6 +1,7 @@
 from django.db import models  
 import uuid
 from datetime import date
+from django.contrib.auth.models import User  
 
 class Author(models.Model):  
   full_name = models.TextField(verbose_name="Автор")  
@@ -72,3 +73,8 @@ class BookInUse(models.Model):
     verbose_name = 'В пользовании'
     verbose_name_plural = 'В пользовании'
 
+
+class UserProfile(models.Model):  
+  
+    age = models.IntegerField()  
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')

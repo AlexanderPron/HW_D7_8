@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Author, Book, PublishingHouse, Friend, BookInUse
+from .models import Author, Book, PublishingHouse, Friend, BookInUse, UserProfile
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
@@ -26,3 +26,7 @@ class FriendAdmin(admin.ModelAdmin):
 class BookInUseAdmin(admin.ModelAdmin):
     list_display = ('book_title', 'user_id', 'start_use_date')
     fields = ('book_title', 'user_id', 'start_use_date')
+
+@admin.register(UserProfile)  
+class ProfileAdmin(admin.ModelAdmin):  
+    pass

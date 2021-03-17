@@ -1,11 +1,14 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import Book, PublishingHouse, BookInUse, Friend
-from catalog.forms import BookForm
+from catalog.forms import BookForm, ProfileCreationForm
+from django.contrib.auth.forms import UserCreationForm  
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, FormView
 from django.template import loader
 from django.shortcuts import redirect
+from django.contrib.auth import login, authenticate
+from allauth.socialaccount.models import SocialAccount
 
 def books_list(request):
     books = Book.objects.all()
@@ -94,3 +97,31 @@ def book_add(request):
                 book.save()
                 return HttpResponseRedirect(reverse_lazy('add-book'))
     return render(request, 'add_book.html', {'form': form})
+
+class RegisterView(FormView):  
+  
+    form_class = UserCreationForm  
+  
+    def form_valid(self, form):  
+        form.save()  
+        username = form.cleaned_data.get('username')  
+        raw_password = form.cleaned_data.get('password1')  
+        login(self.request, authenticate(username=username, password=raw_password))  
+        return super(RegisterView, self).form_valid(form)  
+
+class CreateUserProfile(FormView):  
+  
+    form_class = ProfileCreationForm  
+    template_name = 'profile-create.html'  
+    success_url = reverse_lazy('index')
+
+    def dispatch(self, request, *args, **kwargs):  
+        if self.request.user.is_anonymous:  
+            return HttpResponseRedirect(reverse_lazy('login'))  
+        return super(CreateUserProfile, self).dispatch(request, *args, **kwargs)  
+  
+    def form_valid(self, form):  
+        instance = form.save(commit=False)  
+        instance.user = self.request.user  
+        instance.save()  
+        return super(CreateUserProfile, self).form_valid(form)
