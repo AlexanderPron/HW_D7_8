@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block page-title %} {% endblock %}
+
+{% block content %}
+    {% if error_msg_no_profile %}
+            <p>Профиль не создан!</p>
+    {% else %}
+        <form method="post">  
+            {% csrf_token %}  
+            {{ user_form.as_table }}
+            </br>
+            <input class="btn btn-outline-info btn-sm" type="submit" value="Сохранить">  
+        </form>
+    {% endif %}
+{% endblock %}

@@ -1,14 +1,16 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import Book, PublishingHouse, BookInUse, Friend
-from catalog.forms import BookForm, ProfileCreationForm
+from .models import Book, PublishingHouse, BookInUse, Friend, UserProfile
+from catalog.forms import BookForm, ProfileEditForm
 from django.contrib.auth.forms import UserCreationForm  
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, FormView
+from django.views.generic import CreateView, ListView, FormView, DetailView
 from django.template import loader
 from django.shortcuts import redirect
 from django.contrib.auth import login, authenticate
 from allauth.socialaccount.models import SocialAccount
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404
 
 def books_list(request):
     books = Book.objects.all()
@@ -75,12 +77,6 @@ def bk(request):
     }
     return HttpResponse(template.render(data, request))
 
-# class BookEdit(UpdateView):  
-#     model = Book  
-#     form_class = BookForm  
-#     success_url = reverse_lazy('index')  
-#     template_name = 'update_book.html'  
-
 def book_add(request):
     form = BookForm(request.POST or None)
     if request.method == 'POST':
@@ -98,21 +94,21 @@ def book_add(request):
                 return HttpResponseRedirect(reverse_lazy('add-book'))
     return render(request, 'add_book.html', {'form': form})
 
-class RegisterView(FormView):  
+# class RegisterView(FormView):  
   
-    form_class = UserCreationForm  
+#     form_class = UserCreationForm  
   
-    def form_valid(self, form):  
-        form.save()  
-        username = form.cleaned_data.get('username')  
-        raw_password = form.cleaned_data.get('password1')  
-        login(self.request, authenticate(username=username, password=raw_password))  
-        return super(RegisterView, self).form_valid(form)  
+#     def form_valid(self, form):  
+#         form.save()  
+#         username = form.cleaned_data.get('username')  
+#         raw_password = form.cleaned_data.get('password1')  
+#         login(self.request, authenticate(username=username, password=raw_password))  
+#         return super(RegisterView, self).form_valid(form)  
 
 class CreateUserProfile(FormView):  
   
-    form_class = ProfileCreationForm  
-    template_name = 'profile-create.html'  
+    form_class = ProfileEditForm  
+    template_name = 'profile-edit.html'  
     success_url = reverse_lazy('index')
 
     def dispatch(self, request, *args, **kwargs):  
@@ -120,8 +116,41 @@ class CreateUserProfile(FormView):
             return HttpResponseRedirect(reverse_lazy('login'))  
         return super(CreateUserProfile, self).dispatch(request, *args, **kwargs)  
   
-    def form_valid(self, form):  
-        instance = form.save(commit=False)  
-        instance.user = self.request.user  
-        instance.save()  
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        instance.user = self.request.user
+        instance.save()
         return super(CreateUserProfile, self).form_valid(form)
+
+
+class ShowUserProfile(LoginRequiredMixin, FormView):
+    form_class = ProfileEditForm
+    template_name = 'profile-show.html'
+
+    def get_object(self):
+        obj = None
+        try:
+            obj = UserProfile.objects.get(pk=self.kwargs['pk'])
+        except:
+            pass
+        return obj
+
+    def get_context_data(self, **kwargs):
+        curr_user = self.get_object()
+        if curr_user:
+            kwargs['curr_user'] = curr_user
+            kwargs['user_form'] = ProfileEditForm(initial={'user':curr_user}, instance=kwargs['curr_user'])
+        else:
+            kwargs['error_msg_no_profile'] = True
+        return kwargs
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, self.get_context_data())
+
+    def post(self, request, *args, **kwargs):
+        user_form = ProfileEditForm(request.POST, instance=self.get_object())
+        if user_form.is_valid():
+            user_form.save()
+        return render(request, self.template_name, self.get_context_data())
+
+

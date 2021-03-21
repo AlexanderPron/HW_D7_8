@@ -20,9 +20,10 @@ from catalog import views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.views import LoginView, LogoutView
-from catalog.views import CreateUserProfile, RegisterView
+from catalog.views import ShowUserProfile
 from django.urls import reverse_lazy
-from allauth.account.views import login, logout
+from allauth.account.views import login, logout, signup
+from django.conf.urls import url
 
 urlpatterns = [
     path('grappelli/', include('grappelli.urls')), # grappelli URLS
@@ -33,16 +34,10 @@ urlpatterns = [
     path('book_decrement/', views.book_decrement),
     path('ph/', views.ph, name='ph'),
     path('bk/', views.bk, name='bk'),
-    # path('edit/', BookEdit.as_view(), name='edit-book'),
     path('add/', views.book_add, name='add-book'),
-    # path('login/', LoginView.as_view(template_name='login.html'), name='login'),
-    # path('logout/', LogoutView.as_view(), name='logout'),
     path('login/', login, name='login'),  
     path('logout/', logout, name='logout'),
-    path('register/', RegisterView.as_view(  
-        template_name='register.html',  
-		success_url=reverse_lazy('profile-create')  
-    ), name='register'),  
-    path('profile-create/', CreateUserProfile.as_view(), name='profile-create'),
+    path('register/', signup, name='register'),
+    path('profile/<int:pk>', ShowUserProfile.as_view(), name='profile-show'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

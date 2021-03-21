@@ -31,9 +31,9 @@
         <div class="auth-data">
           {% if request.user.is_authenticated %}
             {% if request.user.get_short_name %}
-              <span>Добро пожаловать, {{ request.user.get_short_name }}</span>
+              <span>Добро пожаловать, <a href="{{ user.profile.get_absolute_url }}">{{ request.user.get_short_name }}</a></span>
             {% else %}
-              <span>Добро пожаловать, {{ request.user.username }}</span>
+              <span>Добро пожаловать, <a href="{{ user.profile.get_absolute_url }}">{{ request.user.username }}</a></span>
             {% endif%}
             <span class="palka">|</span>
             <ul class="nav head-nav">

@@ -1,0 +1,14 @@
+ul.socialaccount_providers{
+    list-style-type: none;
+    margin-left: 0;
+}
+.github{
+    text-decoration: none;
+    background-color: black;
+}
+.remember{
+    display: flex;
+}
+.remember-label{
+    margin-left: 20px;
+}

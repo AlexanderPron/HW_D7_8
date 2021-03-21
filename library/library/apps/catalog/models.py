@@ -1,7 +1,8 @@
-from django.db import models  
+from django.db import models
 import uuid
 from datetime import date
-from django.contrib.auth.models import User  
+from django.contrib.auth.models import User
+from django.urls import reverse, reverse_lazy
 
 class Author(models.Model):  
   full_name = models.TextField(verbose_name="Автор")  
@@ -75,6 +76,15 @@ class BookInUse(models.Model):
 
 
 class UserProfile(models.Model):  
+  age = models.IntegerField()  
+  user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
   
-    age = models.IntegerField()  
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+  def __str__(self):
+    return('{}(id-{})'.format(self.user.username, self.user_id))
+  
+  def get_absolute_url(self):
+    return reverse('profile-show', args=[str(self.id)])
+  
+  class Meta:
+    verbose_name = 'Профиль'
+    verbose_name_plural = 'Профили'

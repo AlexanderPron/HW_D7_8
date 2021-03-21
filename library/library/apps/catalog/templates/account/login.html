@@ -1,0 +1,52 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load account socialaccount %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+
+<h1>{% trans "Sign In" %}</h1>
+
+{% get_providers as socialaccount_providers %}
+
+{% if socialaccount_providers %}
+
+<div class="socialaccount_ballot">
+
+  <ul class="socialaccount_providers">
+    {% for provider in socialaccount_providers %}
+      <li>
+        <a title="{{provider.name}}" class="btn btn-primary socialaccount_provider {{provider.id}}" 
+        href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">Войти с помощью {{provider.name}}</a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+
+{% include "socialaccount/snippets/login_extra.html" %}
+
+{% else %}
+<p>{% blocktrans %}If you have not created an account yet, then please
+<a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+{% endif %}
+<p>или войдите с помощью вашего аккаунта на {{ site.name }}</p>
+<form class="login" method="POST" action="{% url 'account_login' %}">
+  {% csrf_token %}
+  <label><b>Логин</b></label>
+  {{ form.login }}
+  </br>
+  <label><b>Пароль</b></label>
+  {{ form.password }}
+  </br>
+  <div class="remember">{{ form.remember }} <label for="id_remember" class="remember-label">Запомнить меня</label></div>
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+  <!-- <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a> -->
+</br>
+  <button class="btn btn-outline-info btn-sm primaryAction" type="submit">{% trans "Sign In" %}</button>
+</form>
+
+{% endblock %}

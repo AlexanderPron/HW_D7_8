@@ -6,7 +6,7 @@ class BookForm(forms.ModelForm):
         model = Book  
         fields = '__all__'
 
-class ProfileCreationForm(forms.ModelForm):  
+class ProfileEditForm(forms.ModelForm):  
   
     class Meta:  
         model = UserProfile  
