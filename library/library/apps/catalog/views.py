@@ -11,6 +11,8 @@ from django.contrib.auth import login, authenticate
 from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
+from allauth.account.views import SignupView
+from .models import UserProfile
 
 def books_list(request):
     books = Book.objects.all()
@@ -94,17 +96,6 @@ def book_add(request):
                 return HttpResponseRedirect(reverse_lazy('add-book'))
     return render(request, 'add_book.html', {'form': form})
 
-# class RegisterView(FormView):  
-  
-#     form_class = UserCreationForm  
-  
-#     def form_valid(self, form):  
-#         form.save()  
-#         username = form.cleaned_data.get('username')  
-#         raw_password = form.cleaned_data.get('password1')  
-#         login(self.request, authenticate(username=username, password=raw_password))  
-#         return super(RegisterView, self).form_valid(form)  
-
 class CreateUserProfile(FormView):  
   
     form_class = ProfileEditForm  
@@ -130,7 +121,7 @@ class ShowUserProfile(LoginRequiredMixin, FormView):
     def get_object(self):
         obj = None
         try:
-            obj = UserProfile.objects.get(pk=self.kwargs['pk'])
+            obj = UserProfile.objects.get(user__id=self.kwargs['pk'])
         except:
             pass
         return obj
@@ -145,12 +136,14 @@ class ShowUserProfile(LoginRequiredMixin, FormView):
         return kwargs
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, self.get_context_data())
+        ctxt = {}
+        if request.user.id != self.kwargs['pk']:
+            ctxt['error_msg_no_rights'] = True
+        return render(request, self.template_name, self.get_context_data(**ctxt))
 
     def post(self, request, *args, **kwargs):
         user_form = ProfileEditForm(request.POST, instance=self.get_object())
         if user_form.is_valid():
             user_form.save()
         return render(request, self.template_name, self.get_context_data())
-
-
+        

@@ -5,6 +5,16 @@
 {% block content %}
     {% if error_msg_no_profile %}
             <p>Профиль не создан!</p>
+            <ul class="nav head-nav">
+                <li class="nav-item item-head-nav">
+                  <a href="{% url 'profile-add' pk=user.id %}" class="nav-link">Добавить</a>
+                </li>
+    {% elif error_msg_no_rights %}
+        <p>У вас нет доступа к этой странице! Выйдите этим пользователем и зайдите другим</p>
+        <ul class="nav head-nav">
+            <li class="nav-item item-head-nav">
+              <a href="{% url 'logout' %}" class="nav-link">Выйти</a>
+            </li>
     {% else %}
         <form method="post">  
             {% csrf_token %}  

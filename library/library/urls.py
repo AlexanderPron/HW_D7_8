@@ -20,7 +20,7 @@ from catalog import views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.views import LoginView, LogoutView
-from catalog.views import ShowUserProfile
+from catalog.views import ShowUserProfile, CreateUserProfile
 from django.urls import reverse_lazy
 from allauth.account.views import login, logout, signup
 from django.conf.urls import url
@@ -38,6 +38,7 @@ urlpatterns = [
     path('login/', login, name='login'),  
     path('logout/', logout, name='logout'),
     path('register/', signup, name='register'),
+    path('profile/<int:pk>/add', CreateUserProfile.as_view(), name='profile-add'),
     path('profile/<int:pk>', ShowUserProfile.as_view(), name='profile-show'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
