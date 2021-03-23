@@ -96,23 +96,27 @@ def book_add(request):
                 return HttpResponseRedirect(reverse_lazy('add-book'))
     return render(request, 'add_book.html', {'form': form})
 
-class CreateUserProfile(FormView):  
-  
-    form_class = ProfileEditForm  
+class CreateUserProfile(LoginRequiredMixin, FormView):
+    form_class = ProfileEditForm
     template_name = 'profile-edit.html'  
     success_url = reverse_lazy('index')
 
-    def dispatch(self, request, *args, **kwargs):  
-        if self.request.user.is_anonymous:  
-            return HttpResponseRedirect(reverse_lazy('login'))  
-        return super(CreateUserProfile, self).dispatch(request, *args, **kwargs)  
+    # def dispatch(self, request, *args, **kwargs):  
+    #     if self.request.user.is_anonymous:  
+    #         return HttpResponseRedirect(reverse_lazy('login'))  
+    #     return super(CreateUserProfile, self).dispatch(request, *args, **kwargs)  
   
     def form_valid(self, form):
         instance = form.save(commit=False)
         instance.user = self.request.user
         instance.save()
         return super(CreateUserProfile, self).form_valid(form)
-
+    
+    def get(self, request, *args, **kwargs):
+        ctxt = {}
+        if request.user.id != self.kwargs['pk']:
+            ctxt['error_msg_no_rights'] = True
+        return render(request, self.template_name, self.get_context_data(**ctxt))
 
 class ShowUserProfile(LoginRequiredMixin, FormView):
     form_class = ProfileEditForm

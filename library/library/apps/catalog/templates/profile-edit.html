@@ -3,9 +3,18 @@
 {% block page-title %} {% endblock %}
 
 {% block content %}
-<form method="post">  
+  {% if error_msg_no_rights %}
+        <p>У вас нет доступа к этой странице! Выйдите этим пользователем и зайдите другим</p>
+        <ul class="nav head-nav">
+          <li class="nav-item item-head-nav">
+            <a href="{% url 'logout' %}" class="nav-link">Выйти</a>
+          </li>
+        </ul>
+  {% else %}
+  <form method="post">  
     {% csrf_token %}  
       {{ form.as_table }}  
       <input type="submit" value="Создание профайла">  
-  </form>  
+  </form>
+  {% endif %}
 {% endblock %}

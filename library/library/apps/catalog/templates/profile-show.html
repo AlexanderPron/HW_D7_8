@@ -15,6 +15,7 @@
             <li class="nav-item item-head-nav">
               <a href="{% url 'logout' %}" class="nav-link">Выйти</a>
             </li>
+        </ul>
     {% else %}
         <form method="post">  
             {% csrf_token %}  
