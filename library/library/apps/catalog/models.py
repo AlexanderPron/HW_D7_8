@@ -76,7 +76,7 @@ class BookInUse(models.Model):
 
 
 class UserProfile(models.Model):  
-  age = models.IntegerField()  
+  age = models.IntegerField(verbose_name="Возраст")  
   user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
   
   def __str__(self):

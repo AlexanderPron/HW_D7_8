@@ -101,10 +101,10 @@ class CreateUserProfile(LoginRequiredMixin, FormView):
     template_name = 'profile-edit.html'  
     success_url = reverse_lazy('index')
 
-    # def dispatch(self, request, *args, **kwargs):  
-    #     if self.request.user.is_anonymous:  
-    #         return HttpResponseRedirect(reverse_lazy('login'))  
-    #     return super(CreateUserProfile, self).dispatch(request, *args, **kwargs)  
+    def dispatch(self, request, *args, **kwargs):  
+        if self.request.user.is_anonymous:  
+            return HttpResponseRedirect(reverse_lazy('login'))  
+        return super(CreateUserProfile, self).dispatch(request, *args, **kwargs)  
   
     def form_valid(self, form):
         instance = form.save(commit=False)
@@ -114,6 +114,7 @@ class CreateUserProfile(LoginRequiredMixin, FormView):
     
     def get(self, request, *args, **kwargs):
         ctxt = {}
+        ctxt['error_msg_no_rights'] = False
         if request.user.id != self.kwargs['pk']:
             ctxt['error_msg_no_rights'] = True
         return render(request, self.template_name, self.get_context_data(**ctxt))
@@ -132,6 +133,7 @@ class ShowUserProfile(LoginRequiredMixin, FormView):
 
     def get_context_data(self, **kwargs):
         curr_user = self.get_object()
+        kwargs['error_msg_no_profile'] = False
         if curr_user:
             kwargs['curr_user'] = curr_user
             kwargs['user_form'] = ProfileEditForm(initial={'user':curr_user}, instance=kwargs['curr_user'])
@@ -140,7 +142,8 @@ class ShowUserProfile(LoginRequiredMixin, FormView):
         return kwargs
 
     def get(self, request, *args, **kwargs):
-        ctxt = {}
+        ctxt={}
+        ctxt['error_msg_no_rights'] = False
         if request.user.id != self.kwargs['pk']:
             ctxt['error_msg_no_rights'] = True
         return render(request, self.template_name, self.get_context_data(**ctxt))

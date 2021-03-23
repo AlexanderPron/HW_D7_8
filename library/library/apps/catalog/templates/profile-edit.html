@@ -10,11 +10,13 @@
             <a href="{% url 'logout' %}" class="nav-link">Выйти</a>
           </li>
         </ul>
-  {% else %}
+  {% elif error_msg_no_profile %}
   <form method="post">  
     {% csrf_token %}  
       {{ form.as_table }}  
       <input type="submit" value="Создание профайла">  
   </form>
+  {% else %}
+    <p>Профиль уже существует! Вы можете его <a href="{{ user.profile.get_absolute_url }}" class="nav-link">редактировать</a></p>
   {% endif %}
 {% endblock %}
