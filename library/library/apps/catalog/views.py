@@ -115,6 +115,11 @@ class CreateUserProfile(LoginRequiredMixin, FormView):
     def get(self, request, *args, **kwargs):
         ctxt = {}
         ctxt['error_msg_no_rights'] = False
+        try: 
+            UserProfile.objects.get(user__id=self.kwargs['pk'])
+            ctxt['error_msg_no_profile'] = False
+        except:
+            ctxt['error_msg_no_profile'] = True
         if request.user.id != self.kwargs['pk']:
             ctxt['error_msg_no_rights'] = True
         return render(request, self.template_name, self.get_context_data(**ctxt))

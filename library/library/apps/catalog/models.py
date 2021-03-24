@@ -83,7 +83,7 @@ class UserProfile(models.Model):
     return('{}(id-{})'.format(self.user.username, self.user_id))
   
   def get_absolute_url(self):
-    return reverse('profile-show', args=[str(self.user_id)])
+    return reverse_lazy('profile-show', args=[str(self.user_id)])
   
   class Meta:
     verbose_name = 'Профиль'

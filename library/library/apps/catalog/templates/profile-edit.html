@@ -13,8 +13,9 @@
   {% elif error_msg_no_profile %}
   <form method="post">  
     {% csrf_token %}  
-      {{ form.as_table }}  
-      <input type="submit" value="Создание профайла">  
+      {{ form.as_table }}
+    </br>
+      <input class="btn btn-outline-info btn-sm" type="submit" value="Создание профиля">  
   </form>
   {% else %}
     <p>Профиль уже существует! Вы можете его <a href="{{ user.profile.get_absolute_url }}" class="nav-link">редактировать</a></p>

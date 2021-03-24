@@ -30,11 +30,19 @@
         </nav>
         <div class="auth-data">
           {% if request.user.is_authenticated %}
+            {% if user.profile.get_absolute_url %}
               {% if request.user.get_short_name %}
                 <span>Добро пожаловать, <a href="{{ user.profile.get_absolute_url }}">{{ request.user.get_short_name }}</a></span>
               {% else %}
                 <span>Добро пожаловать, <a href="{{ user.profile.get_absolute_url }}">{{ request.user.username }}</a></span>
               {% endif%}
+            {% else %}
+              {% if request.user.get_short_name %}
+                <span>Добро пожаловать, <a href="{% url 'profile-add' pk=user.id %}">{{ request.user.get_short_name }}</a></span>
+              {% else %}
+                <span>Добро пожаловать, <a href="{% url 'profile-add' pk=user.id %}">{{ request.user.username }}</a></span>
+              {% endif%}
+            {% endif %}
             <span class="palka">|</span>
             <ul class="nav head-nav">
               <li class="nav-item item-head-nav">
